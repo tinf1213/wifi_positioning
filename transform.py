@@ -30,5 +30,3 @@ with open('database.txt', 'w') as json_file:
                     json_file.write(json.dumps(wifi_list))
                     json_file.write("\n")
                     wifi_list = []
-                    
-        data.append(point_wifi_list)

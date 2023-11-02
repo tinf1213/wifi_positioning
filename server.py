@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
-from build import build
+from model import build
+from model import predict
 import os
 import json
 
@@ -29,11 +30,10 @@ def receive_json():
     try:
         # Assuming the incoming request contains a JSON file
         json_data = request.get_json()
-        
+        result = predict(json.dumps(json_data))
         # Process the JSON data as needed
         # ...
-        
-        return jsonify({'message': 'JSON received successfully'}), 200
+        return jsonify({'message': 'JSON received successfully'}, {'Result': result}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
