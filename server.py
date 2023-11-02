@@ -33,7 +33,8 @@ def receive_json():
         result = predict(json.dumps(json_data))
         # Process the JSON data as needed
         # ...
-        return jsonify({'message': 'JSON received successfully'}, {'Result': result}), 200
+        result = str(result[0])
+        return jsonify({'message': 'JSON received successfully', 'position': result}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
