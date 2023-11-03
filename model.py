@@ -8,12 +8,20 @@ import os
 import numpy as np
 import pickle
 
-def one_hot_encoding(mac_list, data):
-    now_wifi_list = [0] * len(mac_list)
-    # for index in range(0, len(data)):
-    #     mac = data[index][0]
-    #     strength = data[index][1]
-    #     now_wifi_list[mac_list.index(mac)] = strength
+def one_hot_encoding(data):
+    os.chdir("data")
+    data = json.loads(data)
+    with open ('crucial_data.txt', 'r') as f:
+        number_of_mac = int(f.readline())
+        mac_list = json.loads(f.readline())
+    now_wifi_list = [0] * number_of_mac
+    for index in range(0, len(data)):
+        mac = data[index][0]
+        if(mac not in mac_list):
+            continue
+        strength = data[index][1]
+        now_wifi_list[mac_list.index(mac)] = strength
+    os.chdir("..")
     return now_wifi_list
 
 def build():
@@ -76,20 +84,18 @@ def build():
         pickle.dump(clf,f)
     os.chdir("..")
 def predict(json_data):
+    print("predicting")
     os.chdir("data")
-    with open ('crucial_data.txt', 'r') as f:
-        number_of_mac = int(f.readline())
-        mac_list = json.loads(f.readline())
     with open('model.pkl', 'rb') as f:
         clf = pickle.load(f)
-    one_hot_array = one_hot_encoding(mac_list, json_data)
+    os.chdir("..")
+    one_hot_array = one_hot_encoding(json_data)
     arr = []
     arr.append(one_hot_array)
     arr = np.array(arr)
     predict_data = clf.predict(arr)
-    os.chdir("..")
+    print("return predict data")
     return predict_data
-# def data_clean_from_input(json_file):
 
 if __name__ == '__main__':
     build()
