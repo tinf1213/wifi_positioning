@@ -26,7 +26,6 @@ def one_hot_encoding(data):
 
 def build():
     os.chdir("data")
-    print(os.getcwd())
     # Load database in
     database = []
     with open('database.txt', 'r') as json_file:
@@ -37,6 +36,7 @@ def build():
     # Create mac set & check how many points
     mac_set = set()
     largest_point_index = 0
+    print(type(database))
     for i in database:
         largest_point_index = max(largest_point_index, i[0]['point'])
         for j in range(1, len(i)):
@@ -53,6 +53,7 @@ def build():
             strength = data[index][1]
             now_wifi_list[mac_list.index(mac)] = strength    
         one_hot_encoding[data[0]['point'] - 1].append(now_wifi_list)
+    print(one_hot_encoding)
     # Keep crucial data
     with open ('crucial_data.txt', 'w') as f:
         f.write(str(number_of_mac))
