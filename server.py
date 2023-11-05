@@ -3,7 +3,7 @@ from model import build
 from model import predict
 import os
 import json
-
+import time
 
 app = Flask(__name__)
 
@@ -18,14 +18,13 @@ def receive_json():
         data = request.form
         data = str(data)
         data = data.split('@')[1]
-        print(data)
+        # print(data)
         str_info = '[' + data + ']'
         data = eval(data)
-        os.chdir("data")
+        os.chdir("/mnt/d/ICSIE/wifi_positioning/data")
         with open('database.txt', 'a') as json_file:
             json_file.write(str_info)
             json_file.write("\n")
-        os.chdir("..")
         print("Sending calling build()")
         build()
         return jsonify({'message': 'database append successfully'}), 200
@@ -60,22 +59,13 @@ def receive_json():
             data.append(info)
         print("reformed")
         json_data = json.dumps(data)
-        result = predict(json.dumps(json_data))
+
+        result = predict(json_data)
         result = str(result[0])
         return jsonify({'message': 'JSON received successfully', 'position': result}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 400
-@app.route('/return', methods=['POST'], endpoint = 'return')
-def receive_json():
-    try:
-        json_data = request.get_json()
-        print(json_data)
-        # transform dict to json
-        json_data = json.dumps(json_data)
-        print()
-        return jsonify(json_data), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 400
+
 if __name__ == '__main__':
     root = os.getcwd()
     app.run(debug=True)
